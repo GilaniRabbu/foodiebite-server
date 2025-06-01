@@ -2,14 +2,13 @@ import { Server } from 'http';
 import app from './app';
 import config from './config';
 import connectDB from './app/db/connect';
-// import { initiateSuperAdmin } from './app/db/db';
 
 let server: Server;
 
 // Main function to start the server
 async function main() {
   try {
-    await connectDB(); 
+    await connectDB();
 
     // await initiateSuperAdmin();
     server = app.listen(Number(config.port), () => {

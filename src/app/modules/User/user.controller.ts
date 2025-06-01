@@ -4,8 +4,6 @@ import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { UserService } from './user.service';
 import ApiError from '../../../errors/ApiErrors';
-import config from '../../../config';
-import mongoose from 'mongoose';
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -13,7 +11,7 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: 'User created successfully',
+    message: 'User Created Successfully',
     data: result,
   });
 });
@@ -41,7 +39,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User updated successfully',
+    message: 'User Updated Successfully',
     data: userData,
   });
 });
@@ -51,7 +49,7 @@ const getUser = catchAsync(async (req: Request, res: Response) => {
   const user = await UserService.getUser(id);
 
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
   }
 
   const { password, ...rest } = user.toObject();
@@ -59,7 +57,7 @@ const getUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User fetched successfully',
+    message: 'User Fetched Successfully',
     data: rest,
   });
 });
@@ -71,7 +69,7 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Users fetched successfully',
+    message: 'Users Fetched Successfully',
     data: users,
   });
 });
@@ -82,13 +80,13 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const result = await UserService.deleteUser(id);
 
   if (!result) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
   }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User deleted successfully',
+    message: 'User Deleted Successfully',
     data: null,
   });
 });

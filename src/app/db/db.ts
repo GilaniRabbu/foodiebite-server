@@ -1,5 +1,3 @@
-
-
 import bcrypt from 'bcryptjs';
 import User from '../modules/User/user.model';
 

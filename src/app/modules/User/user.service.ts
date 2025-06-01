@@ -3,25 +3,18 @@
 import * as bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiErrors';
-import config from '../../../config';
-import { ObjectId } from 'mongodb';
-import emailSender from '../../../helpars/emailSender';
 import User from './user.model'; // Mongoose model
 import { UserStatus } from '../../../constants';
 import formatPhoneNumber from '../../../helpars/phoneHelper';
-import axios from 'axios';
-import { jwtHelpers } from '../../../helpars/jwtHelpers';
-import { Secret } from 'jsonwebtoken';
-import mongoose from 'mongoose';
 
 const createUser = async (payload: {
   firstName: string;
   lastName: string;
   phone: string;
-  password: string;
   email: string;
+  password: string;
 }) => {
-  const { firstName, lastName, phone, password, email } = payload;
+  const { firstName, lastName, phone, email, password } = payload;
   const formattedPhone = formatPhoneNumber(phone);
 
   const existingUser = await User.findOne({ phone: formattedPhone, email });
@@ -35,8 +28,8 @@ const createUser = async (payload: {
     firstName,
     lastName,
     phone: formattedPhone,
-    password: hashedPassword,
     email,
+    password: hashedPassword,
     userStatus: UserStatus.ACTIVE,
   });
 
@@ -65,7 +58,7 @@ const getUser = async (id: string) => {
   const user = await User.findById(id).select('_id phone email role'); // Select specific fields
 
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
   }
 
   return user;
@@ -87,7 +80,7 @@ const deleteUser = async (id: string) => {
   );
 
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
   }
 
   return user;
@@ -100,22 +93,3 @@ export const UserService = {
   deleteUser,
   updateUser,
 };
-
-// const uploadProfilePicture = async (
-//   userId: string,
-//   profilePicture: { url: string; altText: string }
-// ) => {
-//   const user = await User.findById(userId);
-//   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-//   }
-
-//   // Update or create profile with picture
-//   const profile = await Profile.findOneAndUpdate(
-//     { userId },
-//     { profilePicture },
-//     { upsert: true, new: true }
-//   );
-
-//   return profile;
-// };

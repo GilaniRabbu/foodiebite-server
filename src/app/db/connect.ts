@@ -1,8 +1,7 @@
-// src/lib/connect.ts
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
-dotenv.config(); 
+dotenv.config();
 
 const MONGODB_URI = process.env.DATABASE_URL || '';
 
@@ -18,7 +17,7 @@ const connectDB = async () => {
   try {
     await mongoose.connect(MONGODB_URI, {
       // Optional settings
-      dbName: 'your-database-name', // optional
+      dbName: 'restaurant-booking-db',
     });
     isConnected = true;
     console.log('✅ MongoDB connected');

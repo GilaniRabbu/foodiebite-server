@@ -17,7 +17,7 @@ RUN npm run build
 FROM node:23-slim
 
 WORKDIR /app
-COPY package*.json ./ 
+COPY package*.json ./
 
 # Install only production dependencies
 RUN npm install --production

@@ -2,13 +2,11 @@ import * as bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
-import emailSender from '../../../helpars/emailSender';
 import { jwtHelpers } from '../../../helpars/jwtHelpers';
 import ApiError from '../../../errors/ApiErrors';
 import axios from 'axios';
 
 import User from '../User/user.model';
-import { verify } from 'crypto';
 import formatPhoneNumber from '../../../helpars/phoneHelper';
 import { UserStatus } from '../../../constants';
 
@@ -257,20 +255,17 @@ const loginUser = async (payload: {
 }> => {
   // Check if user exists by phone
   const user = await User.findOne({ email: payload.email }).select(
-    '_id firstName lastName role phone email isPhoneVerified userStatus isRegistered password'
+    '_id firstName lastName phone email role userStatus password'
   );
   console.log(payload.email);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'ইউজার খুঁজে পাওয়া যায়নি');
+    throw new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
   }
 
   // Verify password
   const isPasswordValid = await bcrypt.compare(payload.password, user.password);
   if (!isPasswordValid) {
-    throw new ApiError(
-      httpStatus.UNAUTHORIZED,
-      'ভুল পাসওয়ার্ড প্রবেশ করা হয়েছে'
-    );
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid Password Entered');
   }
 
   // Create JWT payload
