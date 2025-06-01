@@ -20,17 +20,16 @@ const verifyToken = (...roles: string[]) => {
   ) => {
     try {
       const token = extractToken(req.headers.authorization);
-      console.log("token is", token)
+      console.log('token is', token);
       if (!token) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
       }
-    
+
       const verifiedUser = jwtHelpers.verifyToken(
         token,
         config.jwt.jwt_secret as Secret
       );
-      console.log("verifiedUser is", verifiedUser)
-
+      console.log('verifiedUser is', verifiedUser);
 
       if (!verifiedUser?.phone) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
@@ -42,7 +41,6 @@ const verifyToken = (...roles: string[]) => {
         throw new ApiError(httpStatus.NOT_FOUND, 'User not found!');
       }
 
-
       // Optional user status checks
       if (user.isDeleted) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'This user is deleted!');
@@ -50,8 +48,6 @@ const verifyToken = (...roles: string[]) => {
       if (user.userStatus === 'BLOCKED') {
         throw new ApiError(httpStatus.FORBIDDEN, 'Your account is blocked!');
       }
-
-      
 
       if (roles.length && !roles.includes(user.role)) {
         throw new ApiError(

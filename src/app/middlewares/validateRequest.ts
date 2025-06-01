@@ -1,13 +1,12 @@
-
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 
 const validateRequest = (schema: any) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      const parsed = schema.parse(req.body); 
-      req.body = parsed; 
-          next();  
+      const parsed = schema.parse(req.body);
+      req.body = parsed;
+      next();
     } catch (error) {
       if (error instanceof ZodError) {
         // Handle validation error from Zod
@@ -17,7 +16,7 @@ const validateRequest = (schema: any) => {
           errors: error.errors,
         });
       }
-      next(error);  
+      next(error);
     }
   };
 };

@@ -1,7 +1,3 @@
-
-
-
-
 import { NextFunction, Request, Response } from 'express';
 import config from '../../config';
 import { JwtPayload, Secret } from 'jsonwebtoken';
@@ -24,7 +20,7 @@ const auth = (...roles: string[]) => {
   ) => {
     try {
       const token = extractToken(req.headers.authorization);
-      console.log("token is", token)
+      console.log('token is', token);
       if (!token) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
       }
@@ -44,7 +40,6 @@ const auth = (...roles: string[]) => {
         throw new ApiError(httpStatus.NOT_FOUND, 'User not found!');
       }
 
-
       // Optional user status checks
       if (user.isDeleted) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'This user is deleted!');
@@ -52,8 +47,6 @@ const auth = (...roles: string[]) => {
       if (user.userStatus === 'BLOCKED') {
         throw new ApiError(httpStatus.FORBIDDEN, 'Your account is blocked!');
       }
-
-      
 
       if (roles.length && !roles.includes(user.role)) {
         throw new ApiError(

@@ -1,4 +1,3 @@
-
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { ZodError } from 'zod';
@@ -37,7 +36,7 @@ const GlobalErrorHandler = (
   // JWT Token expired
   else if (error instanceof TokenExpiredError) {
     statusCode = httpStatus.UNAUTHORIZED;
-    message = 'অননুমোদিত অনুরোধ। অনুগ্রহ করে আবার লগইন করুন।';
+    message = 'Unauthorized request. Please log in again.';
     errorMessages = [{ path: '', message }];
   }
 
@@ -68,9 +67,7 @@ const GlobalErrorHandler = (
     statusCode = httpStatus.BAD_REQUEST;
     message = error.message || 'Type error occurred.';
     errorMessages = [{ path: '', message }];
-  }
-  
-  else if (error instanceof ReferenceError) {
+  } else if (error instanceof ReferenceError) {
     statusCode = httpStatus.BAD_REQUEST;
     message = 'Reference error occurred.';
     errorMessages = [{ path: '', message }];
