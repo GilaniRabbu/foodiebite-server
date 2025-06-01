@@ -255,7 +255,7 @@ const loginUser = async (payload: {
 }> => {
   // Check if user exists by phone
   const user = await User.findOne({ email: payload.email }).select(
-    '_id firstName lastName phone email role userStatus password'
+    '_id firstName lastName phone email password role userStatus isDeleted isEmailVerified isPhoneVerified'
   );
   console.log(payload.email);
   if (!user) {
