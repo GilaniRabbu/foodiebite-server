@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Auth Routes](#auth-routes)
+- [Meal Routes](#meal-routes)
 
 ## Auth Routes
 
@@ -14,3 +15,7 @@
 - **PUT /auth/change-password**: Change the password of the logged-in user
 - **POST /auth/forgot-password**: Initiate password reset process
 - **POST /auth/reset-password**: Complete password reset process
+
+## Meal Routes
+
+- **POST /meals/create**: Create a meal
