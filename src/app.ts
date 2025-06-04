@@ -25,9 +25,9 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-// app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 // app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
-app.use('/uploads', express.static(path.join('/app/uploads')));
+// app.use('/uploads', express.static(path.join('/app/uploads')));
 
 // Handle OPTIONS request for CORS pre-flight
 app.options('*', cors(corsOptions));
