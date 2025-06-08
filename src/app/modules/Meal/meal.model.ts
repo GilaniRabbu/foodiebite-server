@@ -4,11 +4,11 @@ const MealSchema = new Schema(
   {
     name: { type: String, required: true },
     description: { type: String },
-    // type: {
-    //   type: String,
-    //   enum: ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK', 'DESSERT'],
-    //   required: true,
-    // },
+    type: {
+      type: String,
+      enum: ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK', 'DESSERT'],
+      required: true,
+    },
     images: [
       {
         url: { type: String, required: true },
