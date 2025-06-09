@@ -11,7 +11,11 @@ import morgan from 'morgan';
 const app: Application = express();
 
 export const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  origin: [
+    'https://restaurant-booking-client-three.vercel.app/',
+    'http://localhost:3000',
+    'http://localhost:3001',
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true, // Allow credentials (cookies, headers)
