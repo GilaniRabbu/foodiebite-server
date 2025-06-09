@@ -12,9 +12,8 @@ const app: Application = express();
 
 export const corsOptions = {
   origin: [
-    'https://restaurant-booking-client-three.vercel.app/',
     'http://localhost:3000',
-    'http://localhost:3001',
+    'https://restaurant-booking-client-three.vercel.app',
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
