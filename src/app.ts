@@ -11,21 +11,10 @@ import morgan from 'morgan';
 const app: Application = express();
 
 export const corsOptions = {
-  origin: function (
-    origin: string | undefined,
-    callback: (err: Error | null, allow?: boolean) => void
-  ) {
-    const allowedOrigins = [
-      'http://localhost:3000',
-      'https://restaurant-booking-client-three.vercel.app',
-    ];
-
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: [
+    'https://restaurant-booking-client-three.vercel.app',
+    'http://localhost:3000',
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
