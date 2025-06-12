@@ -9,6 +9,11 @@ const BookingSchema = new Schema(
         required: true,
       },
     ],
+    type: {
+      type: String,
+      enum: ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK', 'DESSERT'],
+      required: false,
+    },
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
@@ -20,7 +25,8 @@ const BookingSchema = new Schema(
     email: { type: String, required: false },
     numberOfGuests: { type: Number, required: true },
     reservationDate: { type: Date, required: true },
-    reservationTime: { type: String, required: true }, // e.g., '7:00 PM'
+    reservationTime: { type: String, required: true },
+    total: { type: Number, required: false },
 
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date },

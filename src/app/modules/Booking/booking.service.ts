@@ -4,41 +4,94 @@ import Booking from './booking.model';
 import { Types } from 'mongoose';
 import Meal from '../Meal/meal.model';
 import User from '../User/user.model';
+import mongoose from 'mongoose';
 
-const createBooking = async (payload: any): Promise<any> => {
-  const { mealIds, userId, ...rest } = payload;
+const createBooking = async (
+  payload: any
+): Promise<{ type: string; total: number }[]> => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  if (userId) {
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  try {
+    const { mealIds, userId, ...rest } = payload;
+
+    // Validate mealIds array
+    if (!Array.isArray(mealIds) || mealIds.length === 0) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'No mealIds provided.');
     }
-  }
 
-  // Check if all mealIds are valid ObjectIds
-  const areValidIds = mealIds.every((id: string) => Types.ObjectId.isValid(id));
-  if (!areValidIds) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'One or more mealIds are invalid.'
+    // Validate ObjectIds
+    const areValidIds = mealIds.every((id: string) =>
+      Types.ObjectId.isValid(id)
     );
-  }
+    if (!areValidIds) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'One or more mealIds are invalid.'
+      );
+    }
 
-  // Check if all mealIds exist in Meal collection
-  const existingMeals = await Meal.find({
-    _id: { $in: mealIds },
-    isDeleted: false,
-  });
+    // Fetch and verify meals from DB
+    const meals = await Meal.find({
+      _id: { $in: mealIds },
+      isDeleted: false,
+    }).session(session);
 
-  if (existingMeals.length !== mealIds.length) {
-    throw new ApiError(
-      httpStatus.NOT_FOUND,
-      'One or more selected meals were not found.'
+    if (meals.length !== mealIds.length) {
+      throw new ApiError(
+        httpStatus.NOT_FOUND,
+        'One or more selected meals were not found.'
+      );
+    }
+
+    // Optional: validate user
+    if (userId) {
+      const user = await User.findById(userId).session(session);
+      if (!user) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+      }
+    }
+
+    // Group meals by type
+    const mealsByType: Record<string, { ids: string[]; total: number }> = {};
+    meals.forEach((meal) => {
+      const type = meal.type;
+      if (!mealsByType[type]) {
+        mealsByType[type] = { ids: [], total: 0 };
+      }
+      mealsByType[type].ids.push(meal._id.toString());
+      mealsByType[type].total += Number(meal.price);
+    });
+
+    // Create bookings and build return structure
+    const bookings = await Promise.all(
+      Object.entries(mealsByType).map(async ([type, data]) => {
+        await Booking.create(
+          [
+            {
+              ...rest,
+              userId,
+              mealIds: data.ids,
+              type,
+              total: data.total,
+            },
+          ],
+          { session }
+        );
+
+        return { type, total: data.total };
+      })
     );
-  }
 
-  const booking = await Booking.create({ mealIds, ...rest });
-  return booking;
+    await session.commitTransaction();
+    session.endSession();
+
+    return bookings; // Only [{ type, total }, ...]
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
 };
 
 export const BookingService = {
