@@ -2,7 +2,7 @@ import express from 'express';
 import { AuthRoute } from '../modules/Auth/auth.route';
 import { UserRoute } from '../modules/User/user.route';
 // import { ContactRoutes } from '../modules/Contact/contact.route';
-// import { BookingRoutes } from '../modules/Booking/booking.route';
+import { BookingRoutes } from '../modules/Booking/booking.route';
 import { MealRoutes } from '../modules/Meal/meal.route';
 
 const router = express.Router();
@@ -23,14 +23,14 @@ const moduleRoutes = [
   //   route: ContactRoutes,
   // },
 
-  // {
-  //   path: '/booking',
-  //   route: BookingRoutes,
-  // },
-
   {
     path: '/meals',
     route: MealRoutes,
+  },
+
+  {
+    path: '/booking',
+    route: BookingRoutes,
   },
 ];
 

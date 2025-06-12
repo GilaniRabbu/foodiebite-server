@@ -3,6 +3,7 @@ import { Schema, model } from 'mongoose';
 const MealSchema = new Schema(
   {
     name: { type: String, required: true },
+    category: { type: String },
     description: { type: String },
     type: {
       type: String,

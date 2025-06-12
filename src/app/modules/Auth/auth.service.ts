@@ -275,6 +275,7 @@ const loginUser = async (payload: {
     lastName: user.lastName,
     phone: user.phone,
     email: user.email,
+    role: user.role,
   };
 
   // Generate tokens
@@ -300,6 +301,7 @@ const loginUser = async (payload: {
       lastName: user.lastName,
       phone: user.phone,
       email: user.email,
+      role: user.role,
     },
   };
 };
