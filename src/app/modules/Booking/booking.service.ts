@@ -1,14 +1,12 @@
-import httpStatus from 'http-status';
-import ApiError from '../../../errors/ApiErrors';
-import Booking from './booking.model';
-import { Types } from 'mongoose';
-import Meal from '../Meal/meal.model';
-import User from '../User/user.model';
-import mongoose from 'mongoose';
+import httpStatus from "http-status";
+import ApiError from "../../../errors/ApiErrors";
+import Booking from "./booking.model";
+import { Types } from "mongoose";
+import Meal from "../Meal/meal.model";
+import User from "../User/user.model";
+import mongoose from "mongoose";
 
-const createBooking = async (
-  payload: any
-): Promise<{ type: string; total: number }[]> => {
+const createBooking = async (payload: any): Promise<any> => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -17,7 +15,7 @@ const createBooking = async (
 
     // Validate mealIds array
     if (!Array.isArray(mealIds) || mealIds.length === 0) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'No mealIds provided.');
+      throw new ApiError(httpStatus.BAD_REQUEST, "No mealIds provided.");
     }
 
     // Validate ObjectIds
@@ -27,7 +25,7 @@ const createBooking = async (
     if (!areValidIds) {
       throw new ApiError(
         httpStatus.BAD_REQUEST,
-        'One or more mealIds are invalid.'
+        "One or more mealIds are invalid."
       );
     }
 
@@ -40,7 +38,7 @@ const createBooking = async (
     if (meals.length !== mealIds.length) {
       throw new ApiError(
         httpStatus.NOT_FOUND,
-        'One or more selected meals were not found.'
+        "One or more selected meals were not found."
       );
     }
 
@@ -48,7 +46,7 @@ const createBooking = async (
     if (userId) {
       const user = await User.findById(userId).session(session);
       if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+        throw new ApiError(httpStatus.NOT_FOUND, "User not found");
       }
     }
 
@@ -64,9 +62,9 @@ const createBooking = async (
     });
 
     // Create bookings and build return structure
-    const bookings = await Promise.all(
+    const createdBookings = await Promise.all(
       Object.entries(mealsByType).map(async ([type, data]) => {
-        await Booking.create(
+        const [createdBooking] = await Booking.create(
           [
             {
               ...rest,
@@ -79,14 +77,12 @@ const createBooking = async (
           { session }
         );
 
-        return { type, total: data.total };
+        return createdBooking;
       })
     );
-
     await session.commitTransaction();
     session.endSession();
-
-    return bookings; // Only [{ type, total }, ...]
+    return createdBookings.map((booking) => booking._id);
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
