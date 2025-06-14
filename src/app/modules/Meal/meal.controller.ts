@@ -5,6 +5,9 @@ import sendResponse from '../../../shared/sendResponse';
 import { MealService } from './meal.service';
 import { IMeal } from './meal.interface';
 import cloudinary from '../../../helpars/cloudinary';
+import { IPaginationOptions } from '../../../interfaces/paginations';
+import ApiError from '../../../errors/ApiErrors';
+import Meal from './meal.model';
 
 const createMeal = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -83,6 +86,47 @@ const getAllMeals = catchAsync(async (_req: Request, res: Response) => {
   });
 });
 
+const getAllCategories = async (req: Request, res: Response) => {
+  try {
+    const categories = await MealService.getAllCategories();
+    res.status(200).json({ success: true, data: categories });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: 'Failed to fetch categories', error });
+  }
+};
+
+const getMealsByCategory = catchAsync(async (req: Request, res: Response) => {
+  const category = req.query.category as string;
+  console.log(category);
+  if (!category) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Category is required.');
+  }
+
+  const paginationOptions: IPaginationOptions = {
+    page: req.query.page ? Number(req.query.page) : undefined,
+    limit: req.query.limit ? Number(req.query.limit) : undefined,
+    sortBy: typeof req.query.sortBy === 'string' ? req.query.sortBy : undefined,
+    sortOrder:
+      req.query.sortOrder === 'asc' || req.query.sortOrder === 'desc'
+        ? (req.query.sortOrder as 'asc' | 'desc')
+        : undefined,
+  };
+
+  const result = await MealService.getMealsByCategory(
+    category,
+    paginationOptions
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Meals retrieved successfully',
+    data: result,
+  });
+});
+
 const getMealById = catchAsync(async (req: Request, res: Response) => {
   const result = await MealService.getMealById(req.params.id);
   sendResponse<IMeal>(res, {
@@ -119,4 +163,9 @@ export const MealController = {
   getMealById,
   updateMeal,
   deleteMeal,
+  getAllCategories,
+  getMealsByCategory,
+  nullifyAllMealCategories,
+  updateMealCategories,
+  updateMultipleMealCategories,
 };

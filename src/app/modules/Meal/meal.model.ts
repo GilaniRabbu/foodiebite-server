@@ -3,7 +3,8 @@ import { Schema, model } from 'mongoose';
 const MealSchema = new Schema(
   {
     name: { type: String, required: true },
-    category: { type: String },
+    categories: { type: [String] },
+    keywords: { type: [String] },
     description: { type: String },
     type: {
       type: String,
@@ -16,9 +17,9 @@ const MealSchema = new Schema(
         altText: { type: String, required: true },
       },
     ],
-    // ingredients: [{ type: String }],
     price: { type: Number, required: true },
     isAvailable: { type: Boolean, default: true },
+    // ingredients: [{ type: String }],
     // mealStatus: {
     //   type: String,
     //   enum: ['ACTIVE', 'INACTIVE', 'DELETED'],

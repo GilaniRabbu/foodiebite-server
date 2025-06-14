@@ -1,10 +1,9 @@
-import httpStatus from "http-status";
-import ApiError from "../../../errors/ApiErrors";
-import Booking from "./booking.model";
-import { Types } from "mongoose";
-import Meal from "../Meal/meal.model";
-import User from "../User/user.model";
-import mongoose from "mongoose";
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiErrors';
+import Booking from './booking.model';
+import mongoose, { Types } from 'mongoose';
+import Meal from '../Meal/meal.model';
+import User from '../User/user.model';
 
 const createBooking = async (payload: any): Promise<any> => {
   const session = await mongoose.startSession();
@@ -15,7 +14,7 @@ const createBooking = async (payload: any): Promise<any> => {
 
     // Validate mealIds array
     if (!Array.isArray(mealIds) || mealIds.length === 0) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "No mealIds provided.");
+      throw new ApiError(httpStatus.BAD_REQUEST, 'No mealIds provided.');
     }
 
     // Validate ObjectIds
@@ -25,7 +24,7 @@ const createBooking = async (payload: any): Promise<any> => {
     if (!areValidIds) {
       throw new ApiError(
         httpStatus.BAD_REQUEST,
-        "One or more mealIds are invalid."
+        'One or more mealIds are invalid.'
       );
     }
 
@@ -38,7 +37,7 @@ const createBooking = async (payload: any): Promise<any> => {
     if (meals.length !== mealIds.length) {
       throw new ApiError(
         httpStatus.NOT_FOUND,
-        "One or more selected meals were not found."
+        'One or more selected meals were not found.'
       );
     }
 
@@ -46,7 +45,7 @@ const createBooking = async (payload: any): Promise<any> => {
     if (userId) {
       const user = await User.findById(userId).session(session);
       if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+        throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
       }
     }
 

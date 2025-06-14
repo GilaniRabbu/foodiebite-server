@@ -13,6 +13,12 @@ router.post(
   MealController.createMeal
 );
 
+// Nullify all categories
+// router.patch('/nullify-categories', MealController.nullifyAllMealCategories);
+// router.put('/bulk-update-categories', MealController.updateMultipleMealCategories);
+
+router.get('/categories', MealController.getAllCategories);
+router.get('/meals-by-category', MealController.getMealsByCategory);
 router.get('/', MealController.getAllMeals);
 router.get('/:id', MealController.getMealById);
 
