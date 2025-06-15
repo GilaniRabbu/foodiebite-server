@@ -34,17 +34,20 @@ const getMealsByCategory = async (
 ): Promise<any> => {
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(options);
-  console.log('category from service', category);
-  const filter = {
-    categories: { $in: [category] }, // ✅ Correctly matches if category exists in array
-    // isDeleted: false,
+
+  const filter: any = {
+    // categories: { $in: [category] }, // ✅ Correctly matches if category exists in array
+    isDeleted: false,
   };
+
+  if (category && category.trim() !== '') {
+    filter.categories = { $in: [category] };
+  }
 
   const meals = await Meal.find(filter)
     .sort({ [sortBy]: sortOrder === 'asc' ? 1 : -1 })
     .skip(skip)
     .limit(limit);
-  console.log(meals);
 
   const total = await Meal.countDocuments(filter);
 

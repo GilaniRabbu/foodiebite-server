@@ -7,7 +7,6 @@ import { IMeal } from './meal.interface';
 import cloudinary from '../../../helpars/cloudinary';
 import { IPaginationOptions } from '../../../interfaces/paginations';
 import ApiError from '../../../errors/ApiErrors';
-import Meal from './meal.model';
 
 const createMeal = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -99,10 +98,10 @@ const getAllCategories = async (req: Request, res: Response) => {
 
 const getMealsByCategory = catchAsync(async (req: Request, res: Response) => {
   const category = req.query.category as string;
-  console.log(category);
-  if (!category) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Category is required.');
-  }
+
+  // if (!category) {
+  //   throw new ApiError(httpStatus.BAD_REQUEST, 'Category is required.');
+  // }
 
   const paginationOptions: IPaginationOptions = {
     page: req.query.page ? Number(req.query.page) : undefined,
@@ -165,7 +164,4 @@ export const MealController = {
   deleteMeal,
   getAllCategories,
   getMealsByCategory,
-  nullifyAllMealCategories,
-  updateMealCategories,
-  updateMultipleMealCategories,
 };
