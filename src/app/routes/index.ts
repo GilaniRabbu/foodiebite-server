@@ -1,7 +1,6 @@
 import express from 'express';
 import { AuthRoute } from '../modules/Auth/auth.route';
 import { UserRoute } from '../modules/User/user.route';
-// import { ContactRoutes } from '../modules/Contact/contact.route';
 import { BookingRoutes } from '../modules/Booking/booking.route';
 import { MealRoutes } from '../modules/Meal/meal.route';
 
@@ -17,11 +16,6 @@ const moduleRoutes = [
     path: '/auth',
     route: AuthRoute,
   },
-
-  // {
-  //   path: '/contact',
-  //   route: ContactRoutes,
-  // },
 
   {
     path: '/meals',

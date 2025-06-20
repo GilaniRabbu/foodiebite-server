@@ -1,4 +1,3 @@
-// validations/meal.validation.ts
 import { z } from 'zod';
 
 export const mealTypes = [

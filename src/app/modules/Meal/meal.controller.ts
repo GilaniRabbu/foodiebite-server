@@ -3,10 +3,8 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { MealService } from './meal.service';
-import { IMeal } from './meal.interface';
 import cloudinary from '../../../helpars/cloudinary';
 import { IPaginationOptions } from '../../../interfaces/paginations';
-import ApiError from '../../../errors/ApiErrors';
 
 const createMeal = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -67,7 +65,7 @@ const createMeal = catchAsync(async (req: Request, res: Response) => {
 
   const result = await MealService.createMeal(mealPayload);
 
-  sendResponse<IMeal>(res, {
+  sendResponse<any>(res, {
     statusCode: httpStatus.CREATED,
     success: true,
     message: 'Meal Created Successfully',
@@ -77,7 +75,7 @@ const createMeal = catchAsync(async (req: Request, res: Response) => {
 
 const getAllMeals = catchAsync(async (_req: Request, res: Response) => {
   const result = await MealService.getAllMeals();
-  sendResponse<IMeal[]>(res, {
+  sendResponse<any[]>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Meals retrieved successfully',
@@ -97,7 +95,7 @@ const getAllCategories = async (req: Request, res: Response) => {
 };
 
 const getMealsByCategory = catchAsync(async (req: Request, res: Response) => {
-  const category = req.query.category as string;
+  const category = req.query.category as string | undefined;
 
   // if (!category) {
   //   throw new ApiError(httpStatus.BAD_REQUEST, 'Category is required.');
@@ -128,7 +126,7 @@ const getMealsByCategory = catchAsync(async (req: Request, res: Response) => {
 
 const getMealById = catchAsync(async (req: Request, res: Response) => {
   const result = await MealService.getMealById(req.params.id);
-  sendResponse<IMeal>(res, {
+  sendResponse<any>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Meal retrieved successfully',
@@ -138,7 +136,7 @@ const getMealById = catchAsync(async (req: Request, res: Response) => {
 
 const updateMeal = catchAsync(async (req: Request, res: Response) => {
   const result = await MealService.updateMeal(req.params.id, req.body);
-  sendResponse<IMeal>(res, {
+  sendResponse<any>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Meal updated successfully',
@@ -148,7 +146,7 @@ const updateMeal = catchAsync(async (req: Request, res: Response) => {
 
 const deleteMeal = catchAsync(async (req: Request, res: Response) => {
   const result = await MealService.deleteMeal(req.params.id);
-  sendResponse<IMeal>(res, {
+  sendResponse<any>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Meal deleted successfully',

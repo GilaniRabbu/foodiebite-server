@@ -1,7 +1,7 @@
 import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import { MealController } from './meal.controller';
-import { createMealSchema, updateMealSchema } from './meal.validation';
+import { updateMealSchema } from './meal.validation';
 import { fileUploader } from '../../../helpars/fileUploader';
 
 const router = express.Router();
@@ -19,15 +19,15 @@ router.post(
 
 router.get('/categories', MealController.getAllCategories);
 router.get('/meals-by-category', MealController.getMealsByCategory);
-router.get('/', MealController.getAllMeals);
-router.get('/:id', MealController.getMealById);
 
 router.patch(
   '/:id',
   validateRequest(updateMealSchema),
   MealController.updateMeal
 );
-
 router.delete('/:id', MealController.deleteMeal);
+
+router.get('/', MealController.getAllMeals);
+router.get('/:id([a-fA-F0-9]{24})', MealController.getMealById);
 
 export const MealRoutes = router;

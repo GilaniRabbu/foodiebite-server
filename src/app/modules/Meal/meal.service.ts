@@ -4,6 +4,7 @@ import ApiError from '../../../errors/ApiErrors';
 import Meal from './meal.model';
 import { IPaginationOptions } from '../../../interfaces/paginations';
 import { paginationHelpers } from '../../../helpars/paginationHelper';
+import mongoose from 'mongoose';
 
 const createMeal = async (payload: any): Promise<any> => {
   const meal = await Meal.create(payload);
@@ -29,7 +30,7 @@ const getAllCategories = async (): Promise<string[]> => {
 };
 
 const getMealsByCategory = async (
-  category: string,
+  category: string | undefined,
   options: IPaginationOptions
 ): Promise<any> => {
   const { page, limit, skip, sortBy, sortOrder } =
@@ -65,6 +66,10 @@ const getMealsByCategory = async (
 };
 
 const getMealById = async (id: string): Promise<any> => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid meal ID format');
+  }
+
   const meal = await Meal.findById(id);
   if (!meal || meal.isDeleted) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Meal not found');
