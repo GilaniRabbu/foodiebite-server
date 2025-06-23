@@ -97,7 +97,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'লগইন সফল হয়েছে',
+    message: 'Login Successfully',
     data: result,
   });
 });

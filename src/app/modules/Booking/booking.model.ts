@@ -28,6 +28,12 @@ const BookingSchema = new Schema(
     reservationTime: { type: String, required: true },
     total: { type: Number, required: false },
 
+    status: {
+      type: String,
+      enum: ['PENDING', 'CONFIRMED', 'CANCELLED'],
+      default: 'PENDING',
+    },
+
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date },
   },

@@ -71,6 +71,7 @@ const createBooking = async (payload: any): Promise<any> => {
               mealIds: data.ids,
               type,
               total: data.total,
+              status: 'PENDING',
             },
           ],
           { session }
@@ -89,6 +90,15 @@ const createBooking = async (payload: any): Promise<any> => {
   }
 };
 
+// const getBookingById = async (id: string): Promise<any> => {
+//   const booking = await Booking.findById(id);
+//   if (!booking) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Booking not found');
+//   }
+//   return booking;
+// };
+
 export const BookingService = {
   createBooking,
+  // getBookingById,
 };
