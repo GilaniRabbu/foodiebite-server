@@ -90,15 +90,26 @@ const createBooking = async (payload: any): Promise<any> => {
   }
 };
 
-// const getBookingById = async (id: string): Promise<any> => {
-//   const booking = await Booking.findById(id);
-//   if (!booking) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Booking not found');
-//   }
-//   return booking;
-// };
+const getBookingById = async (id: string): Promise<any> => {
+  if (!Types.ObjectId.isValid(id)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid booking ID');
+  }
+
+  const booking = await Booking.findById(id)
+    .populate({
+      path: 'mealIds',
+      select: 'name price type description',
+    })
+    .lean();
+
+  if (!booking) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Booking not found');
+  }
+
+  return booking;
+};
 
 export const BookingService = {
   createBooking,
-  // getBookingById,
+  getBookingById,
 };

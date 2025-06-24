@@ -15,18 +15,18 @@ const createBooking = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const getBookingById = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const result = await BookingService.getBookingById(id);
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Booking retrieved successfully',
-//     data: result,
-//   });
-// });
+const getBookingById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await BookingService.getBookingById(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Booking retrieved successfully',
+    data: result,
+  });
+});
 
 export const BookingController = {
   createBooking,
-  // getBookingById,
+  getBookingById,
 };
