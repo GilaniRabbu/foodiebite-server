@@ -13,10 +13,13 @@ router.post(
   UserController.createUser
 );
 
-// Dynamic route LAST
+// Get all users
+router.get('/', UserController.getAllUsers);
+
+// Dynamic route get user by id
 router.get('/:id', UserController.getUser);
 
-// Update a user by ID
+// Update a user by id
 router.put('/:id', auth(), UserController.updateUser);
 
 export const UserRoute = router;

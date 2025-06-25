@@ -1,4 +1,3 @@
-// interfaces/meal.interface.ts
 import { Document, Types } from 'mongoose';
 
 export interface IMeal extends Document {

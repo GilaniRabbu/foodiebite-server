@@ -26,7 +26,20 @@ const getBookingById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllBookings = catchAsync(async (req: Request, res: Response) => {
+  const result = await BookingService.getAllBookings(req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Bookings retrieved successfully',
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
 export const BookingController = {
   createBooking,
   getBookingById,
+  getAllBookings,
 };

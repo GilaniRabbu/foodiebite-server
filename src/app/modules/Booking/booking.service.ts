@@ -4,6 +4,9 @@ import Booking from './booking.model';
 import mongoose, { Types } from 'mongoose';
 import Meal from '../Meal/meal.model';
 import User from '../User/user.model';
+import { IPaginationOptions } from '../../../interfaces/paginations';
+import { paginationHelpers } from '../../../helpars/paginationHelper';
+import { IGenericResponse } from '../../../interfaces/common';
 
 const createBooking = async (payload: any): Promise<any> => {
   const session = await mongoose.startSession();
@@ -109,7 +112,51 @@ const getBookingById = async (id: string): Promise<any> => {
   return booking;
 };
 
+const getAllBookings = async (
+  queryParams: any
+): Promise<IGenericResponse<any[]>> => {
+  // Apply pagination
+  const paginationOptions: IPaginationOptions = {
+    page: Number(queryParams.page) || 1,
+    limit: Number(queryParams.limit) || 10,
+    sortBy: queryParams.sortBy || 'createdAt',
+    sortOrder: queryParams.sortOrder || 'desc',
+  };
+
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+
+  const andConditions: any[] = [];
+
+  // Ensure type safety on - && typeof queryParams.status === 'string'
+  if (queryParams.status && typeof queryParams.status === 'string') {
+    andConditions.push({ status: queryParams.status });
+  }
+
+  const whereConditions =
+    andConditions.length > 0 ? { $and: andConditions } : {};
+
+  const result = await Booking.find(whereConditions)
+    .populate('mealIds') // if needed
+    .populate('userId') // optional
+    .sort({ [sortBy]: sortOrder === 'asc' ? 1 : -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Booking.countDocuments(whereConditions);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+
 export const BookingService = {
   createBooking,
   getBookingById,
+  getAllBookings,
 };
