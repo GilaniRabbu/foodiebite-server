@@ -4,7 +4,6 @@ const MealSchema = new Schema(
   {
     name: { type: String, required: true },
     categories: { type: [String] },
-    keywords: { type: [String] },
     description: { type: String },
     type: {
       type: String,
@@ -19,6 +18,7 @@ const MealSchema = new Schema(
     ],
     price: { type: Number, required: true },
     isAvailable: { type: Boolean, default: true },
+    // keywords: { type: [String] },
     // ingredients: [{ type: String }],
     // mealStatus: {
     //   type: String,

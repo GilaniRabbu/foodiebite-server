@@ -4,7 +4,7 @@ export interface IMeal extends Document {
   name: string;
   description?: string;
   categories?: string[];
-  keywords?: string[];
+  // keywords?: string[];
   type: 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK' | 'DESSERT';
   images: string[];
   ingredients?: string[];
