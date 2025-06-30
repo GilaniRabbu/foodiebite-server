@@ -155,8 +155,43 @@ const getAllBookings = async (
   };
 };
 
+const getBookingsByUserId = async (
+  userId: string,
+  options: IPaginationOptions
+): Promise<IGenericResponse<any[]>> => {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid user ID');
+  }
+
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(options);
+
+  const filter = {
+    userId: new mongoose.Types.ObjectId(userId),
+  };
+
+  const bookings = await Booking.find(filter)
+    .populate('mealIds') // if using mealIds
+    .populate('userId') // if you want user info
+    .sort({ [sortBy]: sortOrder === 'asc' ? 1 : -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Booking.countDocuments(filter);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: bookings,
+  };
+};
+
 export const BookingService = {
   createBooking,
   getBookingById,
   getAllBookings,
+  getBookingsByUserId,
 };
