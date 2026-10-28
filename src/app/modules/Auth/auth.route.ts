@@ -29,6 +29,9 @@ router.post(
 
 router.post('/verify-user', AuthController.verifyUser);
 
+// End the session: clears the httpOnly refreshToken cookie
+router.post('/logout', AuthController.logoutUser);
+
 router.post('/forgot-password', AuthController.forgotPassword);
 router.post(
   '/verify-forgot-password-otp',

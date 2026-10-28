@@ -102,6 +102,27 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// POST /auth/logout
+// Ends the session by removing the httpOnly refreshToken cookie that login
+// and the OTP flows set. Public on purpose: the access token may already be
+// expired when the client wants to log out.
+const logoutUser = catchAsync(async (_req: Request, res: Response) => {
+  // Must match the cookie set in loginUser (name + path + httpOnly) or the
+  // browser will not delete it.
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: config.env === 'production',
+    path: '/',
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Logged out successfully',
+    data: null,
+  });
+});
+
 export const AuthController = {
   verifyUserRedirectToken,
   verifyRegsitrationOtp,
@@ -109,4 +130,5 @@ export const AuthController = {
   forgotPassword,
   verifyForgotPasswordOtp,
   loginUser,
+  logoutUser,
 };
