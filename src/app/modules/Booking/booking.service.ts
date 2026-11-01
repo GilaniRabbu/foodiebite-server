@@ -155,6 +155,37 @@ const getAllBookings = async (
   };
 };
 
+const updateBookingStatus = async (
+  id: string,
+  status: string
+): Promise<any> => {
+  if (!Types.ObjectId.isValid(id)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid booking ID');
+  }
+
+  const allowedStatuses = ['PENDING', 'CONFIRMED', 'CANCELLED'];
+  if (!allowedStatuses.includes(status)) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `Status must be one of: ${allowedStatuses.join(', ')}`
+    );
+  }
+
+  const booking = await Booking.findByIdAndUpdate(
+    id,
+    { status },
+    { new: true, runValidators: true }
+  )
+    .populate('mealIds')
+    .populate('userId');
+
+  if (!booking) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Booking not found');
+  }
+
+  return booking;
+};
+
 const getBookingsByUserId = async (
   userId: string,
   options: IPaginationOptions
@@ -194,4 +225,5 @@ export const BookingService = {
   getBookingById,
   getAllBookings,
   getBookingsByUserId,
+  updateBookingStatus,
 };
